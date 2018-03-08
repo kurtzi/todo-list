@@ -3,8 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="container">
+    <header class="header">
+        <h1>Welcome to my todo list</h1>
+    </header>
 
+    <div>
+        <ul id="list">
+            <li>
+                <label>
+                    <input type="checkbox">
+                    first item
+                </label>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <input type="text" id="inputField">
+        <button type="submit" onclick="addAnItem()">
+            Add to list
+        </button>
+    </div>
+
+
+    <button onclick="printLocalStorage()">
+        print items
+    </button>
+</div>
+<script src="main.js"></script>
 </body>
 </html>
