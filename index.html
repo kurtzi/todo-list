@@ -13,25 +13,17 @@
 
     <div>
         <ul id="list">
-            <li>
-                <label>
-                    <input type="checkbox">
-                    first item
-                </label>
-            </li>
         </ul>
     </div>
     <div>
-        <input type="text" id="inputField">
-        <button type="submit" onclick="addAnItem()">
-            Add to list
-        </button>
+        <form id="form" onsubmit="return false">
+            <input type="text" id="inputField">
+            <button type="submit" onclick="addAnItem()">
+                Add to list
+            </button>
+        </form>
     </div>
 
-
-    <button onclick="printLocalStorage()">
-        print items
-    </button>
 </div>
 <script src="main.js"></script>
 </body>
