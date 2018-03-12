@@ -5,24 +5,29 @@
     <title>Todo List</title>
 
     <link rel="stylesheet" href="style/index.css">
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+<body onload="renderTodoItems()">
+
+<div id="page-content">
+    <div class="dropdown" id="sorting-options">
+        <button class="dropbtn">Filter Options</button>
+        <div class="dropdown-content">
+            <a onclick="removeFilters()">None</a>
+            <a onclick="filterByDate()">Date</a>
+            <a onclick="filterByStatus()">Done / Undone</a>
+            <a onclick="filterAlphabeticalOrder()">Alphabetical order</a>
+        </div>
+    </div>
+
+    <div id="checkboxes-lst"></div>
 
 
-</head>
-<body>
+    <div id="submit-task">
+        <div id="submit-message"></div>
+        <input type="text" id="task-description">
+        <button type="button" onclick="addTodoItemToLocalStorage()">Submit Task</button>
 
-<select id="sorting-options">
-    <option value="date">Date</option>
-    <option value="done-undone">Done / Undone</option>
-    <option value="">alphabetical order</option>
-</select>
-
-<div id="checkboxes-lst" > </div>
-
-
-<div id="submit-task">
-
-    <input type="text" id="task-description">
-    <button type="button" onclick="addElementToList()">Submit Task</button>
+    </div>
 
 </div>
 
