@@ -9,6 +9,10 @@ body {
 
 li {
     list-style-type: none;
+    outline: 1px black solid;
+}
+span {
+    float: right;
 }
 
 .container {
@@ -21,4 +25,11 @@ li {
     display: flex;
     justify-content: center;
     background-color: grey;
+}
+.section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    outline: 1px black solid;
+
 }

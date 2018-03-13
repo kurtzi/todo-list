@@ -10,20 +10,33 @@
     <header class="header">
         <h1>Welcome to my todo list</h1>
     </header>
-
-    <div>
-        <ul id="list">
-        </ul>
+    <div class="section">
+        <div class="left">
+            <div>
+                <ul id="list">
+                </ul>
+            </div>
+            <div>
+                <form id="form" onsubmit="return false">
+                    <input type="text" id="inputField">
+                    <button type="submit" onclick="addAnItem()">
+                        Add to list
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="right">
+            <h2>
+                sorting options
+            </h2>
+            <select name="text" onchange="sortList(this)" id="sortDropDown">
+                <option value="none">Please Select Filter</option>
+                <option value="date">By Date</option>
+                <option value="alphabet">By alphabet</option>
+                <option value="done">By Done/Undone</option>
+            </select>
+        </div>
     </div>
-    <div>
-        <form id="form" onsubmit="return false">
-            <input type="text" id="inputField">
-            <button type="submit" onclick="addAnItem()">
-                Add to list
-            </button>
-        </form>
-    </div>
-
 </div>
 <script src="main.js"></script>
 </body>
