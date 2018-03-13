@@ -30,7 +30,7 @@ span {
     justify-content: center;
     background-color: grey;
 }
-.section {
+.main {
     display: flex;
     flex-direction: row;
     justify-content: space-around;

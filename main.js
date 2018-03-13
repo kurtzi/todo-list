@@ -1,6 +1,6 @@
 let appData = [];
 const list = document.getElementById('list');
-
+const delBTnElement = `<button onclick="deleteItem(this)" class="delBtn">delete</button>`;
 function appStarter() {
   const myItems = JSON.parse(localStorage.getItem('myItems'));
   if (myItems === null) {
@@ -20,8 +20,7 @@ function createList() {
 }
 
 function createItem(item) {
-  const isChecked = item.isChecked;
-  return `<li id=${item.id}><label><input type="checkbox" ${isChecked ? 'checked' : ''} onchange="checkBoxOnChange(this)"/> ${item.text}</label><span>${item.date}</span><button onclick="deleteItem(this)" class="delBtn">delete</button></li>`;
+  return `<li id=${item.id}><label><input type="checkbox" ${item.isChecked ? 'checked' : ''} onchange="checkBoxOnChange(this)"/> ${item.text}</label><span>${item.date}</span>${delBTnElement}</li>`;
 }
 
 function addAnItem() {
@@ -37,7 +36,7 @@ function addAnItem() {
       date: new Date()
     };
     const liElement = document.createElement('li');
-    const labelElement = `<label><input type="checkbox" ${item.isChecked ? 'checked' : ''} onchange="checkBoxOnChange(this)"/> ${item.text}</label><span>${item.date}</span><button onclick="deleteItem(this)" class="delBtn">delete</button>`;
+    const labelElement = `<label><input type="checkbox" ${item.isChecked ? 'checked' : ''} onchange="checkBoxOnChange(this)"/> ${item.text}</label><span>${item.date}</span>${delBTnElement}`;
     liElement.setAttribute("id", item.id);
     liElement.innerHTML = labelElement;
     appData.push(item);
@@ -82,13 +81,11 @@ function sortList(event) {
 
   }
   createList();
-
 }
 
 function deleteItem(event) {
   const liElement = event.closest('li');
   appData.forEach((item, index) => {
-
     if (item.id === Number(liElement.id)) {
       appData.splice(index, 1);
       list.removeChild(liElement);
@@ -97,5 +94,4 @@ function deleteItem(event) {
   addItemsToLocalStorage();
 
 }
-
 appStarter();
