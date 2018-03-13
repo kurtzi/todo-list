@@ -7,22 +7,18 @@ body {
     border: 0;
 }
 
-li {
-    list-style-type: none;
-    outline: 1px black solid;
-    margin: 5px;
-}
-span {
-    float: right;
-}
-.delBtn {
-    float: right;
-}
-
 .container {
     background-color: white;
     height: 100%;
     width: 100%;
+}
+
+.right {
+
+}
+
+.left {
+
 }
 
 .header {
@@ -30,10 +26,32 @@ span {
     justify-content: center;
     background-color: grey;
 }
+
 .main {
+    height: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     outline: 1px black solid;
 
 }
+
+li {
+    list-style-type: none;
+    margin: 5px;
+}
+
+span {
+    float: right;
+}
+
+.delBtn {
+    float: right;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+
+
+
+

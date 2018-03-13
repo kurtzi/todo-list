@@ -1,6 +1,7 @@
 let appData = [];
 const list = document.getElementById('list');
 const delBTnElement = `<button onclick="deleteItem(this)" class="delBtn">delete</button>`;
+
 function appStarter() {
   const myItems = JSON.parse(localStorage.getItem('myItems'));
   if (myItems === null) {
@@ -29,12 +30,14 @@ function addAnItem() {
     return console.log('input field is empty');
   }
   else {
+    const date = new Date();
     const item = {
       id: Math.floor(Math.random() * 900000) + 10000,
       text: inputValue.value,
       isChecked: false,
-      date: new Date()
+      date: date
     };
+
     const liElement = document.createElement('li');
     const labelElement = `<label><input type="checkbox" ${item.isChecked ? 'checked' : ''} onchange="checkBoxOnChange(this)"/> ${item.text}</label><span>${item.date}</span>${delBTnElement}`;
     liElement.setAttribute("id", item.id);
@@ -69,8 +72,8 @@ function sortList(event) {
   }
   if (selectedItemValue === 'alphabet') {
     appData.sort((a, b) => {
-      if (a.text < b.text) return -1;
-      if (a.text > b.text) return 1;
+      if (a.text.toLowerCase() < b.text.toLowerCase()) return -1;
+      if (a.text.toLowerCase() > b.text.toLowerCase()) return 1;
       return 0;
     })
   }
@@ -78,7 +81,6 @@ function sortList(event) {
     appData.sort((a, b) => {
       return (a.isChecked === b.isChecked) ? 0 : a.isChecked ? -1 : 1;
     })
-
   }
   createList();
 }
@@ -94,4 +96,5 @@ function deleteItem(event) {
   addItemsToLocalStorage();
 
 }
+
 appStarter();
