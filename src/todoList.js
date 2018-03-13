@@ -9,7 +9,7 @@
 */
 
 const localStorage = window.localStorage;
-const typeOfSorting = { Date :'Date', Status: 'Status', Alphabetical: 'Alphabetical'  };
+const typeOfSorting = { Date :'Date', Status: 'Status', Alphabetical: 'Alphabetical' };
 const statusItem = {Done: "done" , Open: "open"};
 let savedTodoItems ;
 
