@@ -10,25 +10,19 @@
 
 <div id="page-content">
     <div class="dropdown" id="sorting-options">
-        <button class="dropbtn">Filter Options</button>
-        <div class="dropdown-content">
-            <a onclick="removeFilters()">None</a>
-            <a onclick="filterByDate()">Date</a>
-            <a onclick="filterByStatus()">Done / Undone</a>
-            <a onclick="filterAlphabeticalOrder()">Alphabetical order</a>
+        <button class="dropbtn">Sorting Options</button>
+        <div class="dropdown-content hide">
+            <a class="dropdown-content-option" onclick="sortOptions('Date')">Date</a>
+            <a class="dropdown-content-option" onclick="sortOptions('Status')">Done / Undone</a>
+            <a class="dropdown-content-option" onclick="sortOptions('git')">Alphabetical order</a>
         </div>
     </div>
 
-    <div id="checkboxes-lst"></div>
-
+    <ul id="todo-list"></ul>
 
     <div id="submit-task">
-        <div id="submit-message"></div>
-        <input type="text" id="task-description">
-        <button type="button" onclick="addTodoItemToLocalStorage()">Submit Task</button>
-
+        <input type="text" id="task-description" onkeypress="addTodoItemToLocalStorage(event)">
     </div>
-
 </div>
 
 

@@ -9,7 +9,8 @@
 */
 
 const localStorage = window.localStorage;
-
+const typeOfSorting = { Date :'Date', Status: 'Status', Alphabetical: 'Alphabetical'  };
+const statusItem = {Done: "done" , Open: "open"};
 let savedTodoItems ;
 
 let itemsSavedOnLocalStorage = ()=>{
@@ -37,20 +38,6 @@ function renderTodoItems(){
     }
 }
 
-function filterByDate(){
-
-    let savedTodoItems = localStorage.getItem("todoItems");
-    let filteredDateItems = JSON.parse(savedTodoItems).items;
-    filteredDateItems.sort(dateComparison);
-
-    let mainDiv = document.getElementById("checkboxes-lst");
-    mainDiv.innerHTML = ""; //drop all children
-
-    filteredDateItems.forEach((todoItem)=>{
-        addElementToDOM(todoItem);
-    });
-}
-
 function dateComparison (item1, item2){
     let date1 = new Date(item1.date);
     let milliseconds1 = date1.getTime();
@@ -61,23 +48,73 @@ function dateComparison (item1, item2){
     return milliseconds2 - milliseconds1;
 }
 
-function filterByStatus() {
+function sortByStatus() {
 
+    let savedTodoItems = localStorage.getItem("todoItems");
+
+    let openTodoItems = JSON.parse(savedTodoItems).items;
+    openTodoItems = openTodoItems.filter((todoItem)=>{
+        return todoItem.status !== statusItem.Done;
+    });
+
+    let doneTodoItems = JSON.parse(savedTodoItems).items;
+    doneTodoItems = doneTodoItems.filter((todoItem)=>{
+        return todoItem.status !== statusItem.Open;
+    });
+
+    let listItems = document.getElementById("todo-list");
+    listItems.innerHTML = ""; //drop all children
+
+    openTodoItems.forEach((todoItem)=>{
+        addElementToDOM(todoItem);
+    });
+
+    doneTodoItems.forEach((todoItem)=>{
+        addElementToDOM(todoItem);
+    });
 }
 
+function sortTodoItems(sortType){
+    let savedTodoItems = localStorage.getItem("todoItems");
+    let todoItems = JSON.parse(savedTodoItems).items;
 
-function filterAlphabeticalOrder(){
+    if (sortType === typeOfSorting.Date){
+        todoItems.sort(dateComparison);
+    }
 
+    if (sortType === typeOfSorting.Alphabetical){
+        todoItems.sort(stringComparision);
+    }
+
+    let listItems = document.getElementById("todo-list");
+    listItems.innerHTML = ""; //drop all children
+
+    todoItems.forEach((todoItem)=>{
+        addElementToDOM(todoItem);
+    });
 }
 
-function removeFilters(){
-
+function stringComparision(item1, item2){
+    return item1.description > item2.description;
 }
 
-function removeListItems(){
+function sortOptions(sortType){
 
+    switch (sortType) {
+        case typeOfSorting.Date:
+            sortTodoItems(typeOfSorting.Date);
+            break;
+        case typeOfSorting.Status:
+            sortByStatus();
+            break;
+        case typeOfSorting.Alphabetical:
+            sortTodoItems(typeOfSorting.Alphabetical);
+            break;
+        default:
+            sortTodoItems(typeOfSorting.Date);
+            break;
+    }
 }
-
 
 function setItemsToLocalStorage(itemsToSave){
     localStorage.setItem("todoItems", JSON.stringify(itemsToSave) );
@@ -85,27 +122,33 @@ function setItemsToLocalStorage(itemsToSave){
 
 function addElementToDOM(todoItem){
 
-    let mainDiv = document.getElementById("checkboxes-lst");
+    let listItems = document.getElementById("todo-list");
     let listElement = createListElement(todoItem);
-    mainDiv.appendChild(listElement);
+    listItems.appendChild(listElement);
 }
 
-function addTodoItemToLocalStorage(){
+function addTodoItemToLocalStorage(e){
 
-    let itemDescription = document.getElementById("task-description").value;
-    let savedTodoItems = localStorage.getItem("todoItems");
-    savedTodoItems = JSON.parse(savedTodoItems);
+    const Enter = 13;
 
-    let itemId = savedTodoItems.counter + 1;
+    let code = (e.keyCode ? e.keyCode : e.which);
+    if(code === Enter) {
+        let itemDescription = document.getElementById("task-description").value;
+        let savedTodoItems = localStorage.getItem("todoItems");
+        savedTodoItems = JSON.parse(savedTodoItems);
 
-    let newTodoItem = {description: itemDescription, date: new Date(), status: 'open' , id: itemId};
+        let itemId = savedTodoItems.counter + 1;
 
-    savedTodoItems.items.push(newTodoItem);
-    savedTodoItems.counter=  savedTodoItems.counter + 1;
+        let newTodoItem = {description: itemDescription, date: new Date(), status: 'open' , id: itemId};
 
-    setItemsToLocalStorage(savedTodoItems);
-    addElementToDOM(newTodoItem);
-    clearTextInput();
+        savedTodoItems.items.push(newTodoItem);
+        savedTodoItems.counter=  savedTodoItems.counter + 1;
+
+        setItemsToLocalStorage(savedTodoItems);
+        addElementToDOM(newTodoItem);
+        clearTextInput();
+
+    }
 }
 
 function createTaskDate(taskDate){
@@ -138,21 +181,21 @@ function clearTextInput(){
 }
 
 function createListElement(todoItem){
-    let listElemDiv = document.createElement("div");
-    listElemDiv.className = "list-element";
-    listElemDiv.id = todoItem.id;
+    let listItem = document.createElement("li");
+    listItem.className = "list-element";
+    listItem.id = todoItem.id;
 
     let deleteBtn = createDeleteButton(todoItem.id);
     let doneCheckbox = createDoneCheckbox(todoItem);
     let descriptionTaskText = createTaskDescription(todoItem.description);
     let taskDate = createTaskDate(todoItem.date);
 
-    listElemDiv.appendChild(doneCheckbox);
-    listElemDiv.appendChild(descriptionTaskText);
-    listElemDiv.appendChild(deleteBtn);
-    listElemDiv.appendChild(taskDate);
+    listItem.appendChild(doneCheckbox);
+    listItem.appendChild(descriptionTaskText);
+    listItem.appendChild(deleteBtn);
+    listItem.appendChild(taskDate);
 
-    return listElemDiv;
+    return listItem;
 }
 
 function createDeleteButton(idToDelete) {
@@ -179,7 +222,7 @@ function removeItemFromLocalStorage(idToDelete){
 }
 
 function removeItemFromDOM(idToDelete) {
-    let parent = document.getElementById("checkboxes-lst");
+    let parent = document.getElementById("todo-list");
     let child = document.getElementById(idToDelete);
 
     parent.removeChild(child);
@@ -234,10 +277,4 @@ function changeTodoStatusOnLocalStorage(todoItem){
     }
 
     localStorage.setItem("todoItems", JSON.stringify(todoItems) );
-
-}
-
-//TODO: submit message
-function createSubmitMessage(status){
-
 }

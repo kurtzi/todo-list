@@ -1,7 +1,3 @@
-.checkbox-done{
-
-}
-
 .delete-btn{
     -webkit-transition-duration: 0.4s; /* Safari */
     transition-duration: 0.4s;
@@ -17,22 +13,13 @@
     vertical-align: middle;
 }
 
-.task-description{
-
+.list-element{
+    margin: 10px 0 0 0;
 }
 
-#sorting-options{
-
+#task-description, #todo-list {
+    margin: 30px 0 0 0;
 }
-
-.task-date{
-
-}
-
-#submit-message{
-
-}
-
 
 /* Dropdown Button */
 .dropbtn {
@@ -51,13 +38,13 @@
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
-    display: none;
     position: absolute;
     background-color: #f1f1f1;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 }
+
 
 /* Links inside the dropdown */
 .dropdown-content a {
@@ -68,13 +55,21 @@
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd}
+.dropdown-content a:hover {
+    background-color: #ddd
+}
 
 /* Show the dropdown menu on hover */
 .dropdown:hover .dropdown-content {
     display: block;
 }
+.show {
+    display: block;
+}
 
+.hide {
+    display: none; !important;
+}
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
     background-color: #3e8e41;
