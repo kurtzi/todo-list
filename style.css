@@ -10,8 +10,12 @@ body {
 li {
     list-style-type: none;
     outline: 1px black solid;
+    margin: 5px;
 }
 span {
+    float: right;
+}
+.delBtn {
     float: right;
 }
 
