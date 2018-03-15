@@ -17,19 +17,17 @@
                 </ul>
             </div>
             <div>
-                <form id="form" onsubmit="return false">
-                    <input type="text" id="inputField">
-                    <button type="submit" onclick="addAnItem()">
-                        Add to list
-                    </button>
-                </form>
+                <input type="text" id="inputField">
+                <button id="addItemBtn">
+                    Add to list
+                </button>
             </div>
         </div>
         <div class="right">
             <h2>
                 sorting options
             </h2>
-            <select onchange="sortList(this)" id="sortDropDown" title="sorting">
+            <select id="sortDropDown" title="sorting">
                 <option value="none">Please Select Filter</option>
                 <option value="date">By Date</option>
                 <option value="alphabet">By alphabet</option>
