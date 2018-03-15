@@ -7,7 +7,6 @@ function appStarter() {
   const sortingMethod = localStorage.getItem('sortingMethod');
 
   if (myItems) {
-    // appData = myItems;
     appData = myItems;
     sortableData = Object.keys(appData);
     createList();
