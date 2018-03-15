@@ -145,9 +145,9 @@ function getIndexOfNewItemInSortedList(liElement, sortMethod) {
   const listOfItemsInDom = document.querySelectorAll('.listItem');
   const arrayOfItemsInDom = Array.from(listOfItemsInDom);
   let index = listOfItemsInDom.length;
-  arrayOfItemsInDom.push(createItem(liElement));
-  const sortedArray = [];
   if (sortMethod === 'alphabet') {
+    arrayOfItemsInDom.push(createItem(liElement));
+    const sortedArray = [];
     arrayOfItemsInDom.forEach((item) => {
       let domElement = item.querySelector('label');
       sortedArray.push(domElement.innerText)
