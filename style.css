@@ -1,0 +1,50 @@
+html,
+body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.container {
+    background-color: white;
+    height: 100%;
+    width: 100%;
+}
+
+
+.header {
+    display: flex;
+    justify-content: center;
+    background-color: grey;
+}
+
+.main {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    outline: 1px black solid;
+
+}
+
+li {
+    list-style-type: none;
+    margin: 5px;
+}
+
+span {
+    float: right;
+}
+
+.delBtn {
+    float: right;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+
+
+
+
