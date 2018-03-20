@@ -1,35 +1,34 @@
-/*
-1. Have a list of tasks, sorted by add time.
-2. At the end of the task list, add input box that accepts new task by ‘Enter’ key. Adding a new task should put the task at the end of the list and the input box should still appear after the whole list.
-3. Each task should have a checkbox to indicate it’s status (done/open).
-4. Ability to delete task.
-5. Ability to sort by date, done/not done, alphabetical order.
-6. Persistency: upon refresh, task list should appear.
-7. CSS - design however you like
-*/
-
 const localStorage = window.localStorage;
 const typeOfSorting = { Date :'Date', Status: 'Status', Alphabetical: 'Alphabetical' };
 const statusItem = {Done: "done" , Open: "open"};
-let savedTodoItems ;
+let savedTodoItems;
 
-let itemsSavedOnLocalStorage = ()=>{
+let getItemsFromLocalStorage = ()=>{
 
-    let todoItems = {items: [] , counter: 0};
-    savedTodoItems = localStorage.getItem("todoItems");
+    savedTodoItems = JSON.parse(localStorage.getItem("todoItems"));
 
     if (!savedTodoItems){
-        localStorage.setItem("todoItems", JSON.stringify(todoItems) );
+        let todoItems = {items: [] , counter: 0, sortState : typeOfSorting.Date };
+        localStorage.setItem("todoItems", JSON.stringify(todoItems));
         savedTodoItems = todoItems;
     }
 
     return savedTodoItems;
 };
 
+let addItemToLocalStorage = (newItemToSave, sortOption)=>{
+
+    savedTodoItems.items.push(newItemToSave);
+    savedTodoItems.sortState = sortOption;
+    savedTodoItems.counter++;
+    sortOptions();
+    localStorage.setItem("todoItems", JSON.stringify(savedTodoItems));
+
+};
+
 function renderTodoItems(){
 
-    let todoItems = itemsSavedOnLocalStorage();
-    todoItems = JSON.parse(todoItems);
+    let todoItems = getItemsFromLocalStorage();
 
     if (todoItems.items){
         todoItems.items.forEach((todoItem)=>{
@@ -39,6 +38,7 @@ function renderTodoItems(){
 }
 
 function dateComparison (item1, item2){
+
     let date1 = new Date(item1.date);
     let milliseconds1 = date1.getTime();
 
@@ -50,41 +50,19 @@ function dateComparison (item1, item2){
 
 function sortByStatus() {
 
-    let savedTodoItems = localStorage.getItem("todoItems");
+    let todoItems = savedTodoItems.items;
 
-    let openTodoItems = JSON.parse(savedTodoItems).items;
-    openTodoItems = openTodoItems.filter((todoItem)=>{
+    let openTodoItems = todoItems.filter((todoItem)=>{
         return todoItem.status !== statusItem.Done;
     });
 
-    let doneTodoItems = JSON.parse(savedTodoItems).items;
-    doneTodoItems = doneTodoItems.filter((todoItem)=>{
+    let doneTodoItems = todoItems.filter((todoItem)=>{
         return todoItem.status !== statusItem.Open;
     });
 
-    let listItems = document.getElementById("todo-list");
-    listItems.innerHTML = ""; //drop all children
+    todoItems = openTodoItems.concat(doneTodoItems);
 
-    openTodoItems.forEach((todoItem)=>{
-        addElementToDOM(todoItem);
-    });
-
-    doneTodoItems.forEach((todoItem)=>{
-        addElementToDOM(todoItem);
-    });
-}
-
-function sortTodoItems(sortType){
-    let savedTodoItems = localStorage.getItem("todoItems");
-    let todoItems = JSON.parse(savedTodoItems).items;
-
-    if (sortType === typeOfSorting.Date){
-        todoItems.sort(dateComparison);
-    }
-
-    if (sortType === typeOfSorting.Alphabetical){
-        todoItems.sort(stringComparision);
-    }
+    setSortedItems(todoItems, typeOfSorting.Status);
 
     let listItems = document.getElementById("todo-list");
     listItems.innerHTML = ""; //drop all children
@@ -94,30 +72,54 @@ function sortTodoItems(sortType){
     });
 }
 
-function stringComparision(item1, item2){
-    return item1.description > item2.description;
-}
+function sortTodoItems(sortType){
 
-function sortOptions(sortType){
+    let todoItems = savedTodoItems.items;
 
-    switch (sortType) {
-        case typeOfSorting.Date:
-            sortTodoItems(typeOfSorting.Date);
-            break;
-        case typeOfSorting.Status:
-            sortByStatus();
-            break;
-        case typeOfSorting.Alphabetical:
-            sortTodoItems(typeOfSorting.Alphabetical);
-            break;
-        default:
-            sortTodoItems(typeOfSorting.Date);
-            break;
+    if (sortType === typeOfSorting.Date){
+        todoItems.sort(dateComparison);
     }
+
+    if (sortType === typeOfSorting.Alphabetical){
+        todoItems.sort(stringComparision);
+    }
+
+    setSortedItems(todoItems, sortType);
+
+    let listItems = document.getElementById("todo-list");
+    listItems.innerHTML = ""; //drop all children
+
+    todoItems.forEach((todoItem)=>{
+        addElementToDOM(todoItem);
+    });
 }
 
-function setItemsToLocalStorage(itemsToSave){
-    localStorage.setItem("todoItems", JSON.stringify(itemsToSave) );
+function setSortedItems(sortedItems, sortType) {
+
+    savedTodoItems.items = sortedItems;
+    savedTodoItems.sortState = sortType;
+    localStorage.setItem("todoItems", JSON.stringify(savedTodoItems));
+}
+
+function stringComparision(item1, item2){
+
+    let textA = item1.description.toUpperCase();
+    let textB = item2.description.toUpperCase();
+
+    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+
+}
+
+function sortOptions(){
+
+    let sortType= document.querySelector('#sorting-options').value;
+
+    if (sortType === typeOfSorting.Status){
+        sortByStatus();
+    }
+    else{
+        sortTodoItems(sortType);
+    }
 }
 
 function addElementToDOM(todoItem){
@@ -127,27 +129,22 @@ function addElementToDOM(todoItem){
     listItems.appendChild(listElement);
 }
 
-function addTodoItemToLocalStorage(e){
+function addItemToList(e){
 
-    const Enter = 13;
+    if (e){
+        //Get the Unicode value of the pressed keyboard key
+        //using which or keyCode depends on browser support
+        let code = e.keyCode ? e.keyCode : e.which;
+        const Enter = 13;
 
-    let code = (e.keyCode ? e.keyCode : e.which);
-    if(code === Enter) {
-        let itemDescription = document.getElementById("task-description").value;
-        let savedTodoItems = localStorage.getItem("todoItems");
-        savedTodoItems = JSON.parse(savedTodoItems);
-
-        let itemId = savedTodoItems.counter + 1;
-
-        let newTodoItem = {description: itemDescription, date: new Date(), status: 'open' , id: itemId};
-
-        savedTodoItems.items.push(newTodoItem);
-        savedTodoItems.counter=  savedTodoItems.counter + 1;
-
-        setItemsToLocalStorage(savedTodoItems);
-        addElementToDOM(newTodoItem);
-        clearTextInput();
-
+        if(code === Enter) {
+            const itemDescription = document.getElementById("task-description").value;
+            const sortOption = document.getElementById("sorting-options").value;
+            let newItemToSave = {description: itemDescription, date: new Date(), status: 'open' , id:  savedTodoItems.counter + 1};
+            addItemToLocalStorage(newItemToSave, sortOption );
+            //addElementToDOM(newItemToSave);
+            clearTextInput();
+        }
     }
 }
 
@@ -212,8 +209,9 @@ function createDeleteButton(idToDelete) {
 }
 
 function removeItemFromLocalStorage(idToDelete){
-    savedTodoItems = localStorage.getItem("todoItems");
-    let todoItems = JSON.parse(savedTodoItems);
+
+    let todoItems = savedTodoItems;
+
     todoItems.items = todoItems.items.filter((savedTodoItem)=> {
         return savedTodoItem.id !== idToDelete
     });
@@ -247,6 +245,9 @@ function createDoneCheckbox(todoItem){
 
     checkbox.onchange = ()=>{
         changeTodoStatusOnLocalStorage(todoItem);
+        if (savedTodoItems.sortState === typeOfSorting.Status ){
+            sortByStatus();
+        }
     };
 
     return checkbox;
@@ -254,8 +255,7 @@ function createDoneCheckbox(todoItem){
 
 function changeTodoStatusOnLocalStorage(todoItem){
 
-    savedTodoItems = localStorage.getItem("todoItems");
-    let todoItems = JSON.parse(savedTodoItems);
+    let todoItems = savedTodoItems;
 
     for(let i =0 ; i < todoItems.items.length; i++){
 
@@ -278,3 +278,16 @@ function changeTodoStatusOnLocalStorage(todoItem){
 
     localStorage.setItem("todoItems", JSON.stringify(todoItems) );
 }
+
+function setDropdownSelection(){
+    document.querySelector('#sorting-options').value = savedTodoItems.sortState;
+}
+
+
+getItemsFromLocalStorage();
+setDropdownSelection();
+renderTodoItems();
+
+//event handlers
+document.querySelector('#task-description').addEventListener('keypress', addItemToList);
+document.querySelector('#sorting-options').addEventListener('change', sortOptions);

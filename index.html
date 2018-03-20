@@ -5,29 +5,27 @@
     <title>Todo List</title>
 
     <link rel="stylesheet" href="style/index.css">
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-<body onload="renderTodoItems()">
+<body>
+
 
 <div id="page-content">
-    <div class="dropdown" id="sorting-options">
-        <button class="dropbtn">Sorting Options</button>
-        <div class="dropdown-content hide">
-            <a class="dropdown-content-option" onclick="sortOptions('Date')">Date</a>
-            <a class="dropdown-content-option" onclick="sortOptions('Status')">Done / Undone</a>
-            <a class="dropdown-content-option" onclick="sortOptions('git')">Alphabetical order</a>
-        </div>
-    </div>
 
-    <ul id="todo-list"></ul>
+    <p>Sorting Options:</p>
 
-    <div id="submit-task">
-        <input type="text" id="task-description" onkeypress="addTodoItemToLocalStorage(event)">
-    </div>
+    <select id="sorting-options">
+        <option value="Date">Date</option>
+        <option value="Alphabetical">Alphabetical Order</option>
+        <option value="Status">Done / Undone</option>
+    </select>
+
+
+    <ul id="todo-list"> </ul>
+
+    <input type="text" id="task-description">
+
 </div>
 
-
 <script src="src/todoList.js"></script>
-
 
 </body>
 </html>
