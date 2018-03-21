@@ -22,13 +22,17 @@ let saveStateToLocalStorage = (newItemToSave, sortOption) => {
 
     savedTodoItems.sortState = sortOption;
     savedTodoItems.counter++;
+    debugger;
+
     let indexToInsert = getIndexToInsert(sortOption, newItemToSave );
-    savedTodoItems.items =  savedTodoItems.items.splice(indexToInsert, 0, newItemToSave);
+    savedTodoItems.items.splice(indexToInsert, 0, newItemToSave);
     localStorage.setItem("todoItems", JSON.stringify(savedTodoItems));
 
 };
 
 function getIndexToInsert(sortType = 'Date', newItemToSave ) {
+
+    debugger;
 
     const comparisons = {
         Date:  dateComparison,
@@ -47,18 +51,9 @@ function getIndexToInsert(sortType = 'Date', newItemToSave ) {
     return savedTodoItems.items.length;
 }
 
-
-function addNewItemToDomOnRelevantLocation(){
-    //TODO: add to the relevant location in the DOM
-    // let referenceNode = document.querySelector(`#${item2.id}`);
-// let parent = document.querySelector('#todo-list');
-// parent.insertBefore(newItemToSave,referenceNode);
-}
-
-
 function statusComparision(item1, item2){
 
-    //TODO: write the function
+    return (item1.status === item2.status)? 1 : 0 ;
 
 }
 
@@ -79,8 +74,6 @@ function dateComparison(item1, item2) {
 
     return milliseconds2 - milliseconds1;
 }
-
-
 
 function sortByStatus() {
 
@@ -156,13 +149,6 @@ function sortItems() {
     }
 }
 
-function addElementToDOM(todoItem) {
-
-    let listItems = document.getElementById("todo-list");
-    let listElement = createListElement(todoItem);
-    listItems.appendChild(listElement);
-}
-
 function addItemToList(e) {
 
     if (e) {
@@ -181,10 +167,27 @@ function addItemToList(e) {
                 id: savedTodoItems.counter + 1
             };
             saveStateToLocalStorage(newItemToSave, sortOption);
-            //addElementToDOM(newItemToSave);
+            addElementToDOM(newItemToSave);
             clearTextInput();
         }
     }
+}
+
+
+function addElementToDOM(newItemToSave) {
+
+    let listItems = document.getElementById("todo-list");
+    let listElement = createListElement(newItemToSave);
+    listItems.appendChild(listElement);
+
+    let sortOption = document.getElementById("sorting-options").value;
+
+    debugger;
+
+    const indexToInsert = getIndexToInsert(sortOption, newItemToSave );
+    let parent = document.querySelector('#todo-list');
+    let referenceNode = document.querySelector(`#${indexToInsert}`);
+    parent.insertBefore(newItemToSave,referenceNode);
 }
 
 function createTaskDate(taskDate) {
@@ -194,6 +197,7 @@ function createTaskDate(taskDate) {
     let dd = taskDate.getDate();
     let mm = taskDate.getMonth() + 1; //January is 0!
     let yyyy = taskDate.getFullYear();
+
 
     if (dd < 10) {
         dd = `0${dd}`;
@@ -224,7 +228,7 @@ function createListElement(todoItem) {
     let deleteBtn = createDeleteButton(todoItem.id);
     let doneCheckbox = createDoneCheckbox(todoItem);
     let descriptionTaskText = createTaskDescription(todoItem.description);
-    let taskDate = createTaskDate(todoItem.Date);
+    let taskDate = createTaskDate(todoItem.date);
 
     listItem.appendChild(doneCheckbox);
     listItem.appendChild(descriptionTaskText);
