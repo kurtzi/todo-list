@@ -1,3 +1,4 @@
+
 const localStorage = window.localStorage;
 const typeOfSorting = {Date: 'Date', Status: 'Status', Alphabetical: 'Alphabetical'};
 const statusItem = {Done: "done", Open: "open"};
@@ -18,42 +19,45 @@ let getItemsFromLocalStorage = () => {
 
 let saveStateToLocalStorage = (newItemToSave, sortOption) => {
 
-    //TODO: debug function
-
     savedTodoItems.sortState = sortOption;
     savedTodoItems.counter++;
-    debugger;
 
-    let indexToInsert = getIndexToInsert(sortOption, newItemToSave );
+    let indexToInsert = getIndexToInsert(sortOption, newItemToSave);
     savedTodoItems.items.splice(indexToInsert, 0, newItemToSave);
+
     localStorage.setItem("todoItems", JSON.stringify(savedTodoItems));
+    localStorage.setItem("indexToInsert", JSON.stringify(indexToInsert));
 
 };
 
-function getIndexToInsert(sortType = 'Date', newItemToSave ) {
-
-    debugger;
+function getIndexToInsert(sortType = 'Date', newItemToSave) {
 
     const comparisons = {
-        Date:  dateComparison,
+        Date: dateComparison,
         Alphabetical: stringComparision,
         Status: statusComparision
     };
 
-    const compareFunc  = comparisons[sortType];
-    for (let i = 0; i < savedTodoItems.items.length - 2 ; i++) {
-        let item1 = savedTodoItems.items[i];
-        let item2 = savedTodoItems.items[i + 1];
-        if (compareFunc(item1 , newItemToSave) && compareFunc(newItemToSave, item2)){
-            return i + 1;
+    const compareFunc = comparisons[sortType];
+
+    if (savedTodoItems.items[0] === undefined || compareFunc(newItemToSave , savedTodoItems.items[0]) < 0 ) {
+        return 0;
+    }
+
+    for (let i = 0; i < savedTodoItems.items.length - 2; i++) {
+
+        if (compareFunc(savedTodoItems.items[i], newItemToSave) <= 0 && compareFunc(newItemToSave, savedTodoItems.items[i+1]) <= 0) {
+            return i+1;
         }
     }
+
     return savedTodoItems.items.length;
+
 }
 
-function statusComparision(item1, item2){
+function statusComparision(item1, item2) {
 
-    return (item1.status === item2.status)? 1 : 0 ;
+    return (item1.status === item2.status) ? 1 : 0;
 
 }
 
@@ -66,13 +70,13 @@ function renderTodoItems() {
 
 function dateComparison(item1, item2) {
 
-    let date1 = new Date(item1.Date);
+    let date1 = new Date(item1.date);
     let milliseconds1 = date1.getTime();
 
-    let date2 = new Date(item2.Date);
+    let date2 = new Date(item2.date);
     let milliseconds2 = date2.getTime();
 
-    return milliseconds2 - milliseconds1;
+    return (milliseconds1 < milliseconds2) ? -1 : (milliseconds1 > milliseconds2) ? 1 : 0;
 }
 
 function sortByStatus() {
@@ -158,36 +162,38 @@ function addItemToList(e) {
         const Enter = 13;
 
         if (code === Enter) {
+
             const itemDescription = document.getElementById("task-description").value;
             const sortOption = document.getElementById("sorting-options").value;
             let newItemToSave = {
                 description: itemDescription,
                 date: new Date(),
                 status: 'open',
-                id: savedTodoItems.counter + 1
+                id: savedTodoItems.counter
             };
+
+            const isNew = true;
             saveStateToLocalStorage(newItemToSave, sortOption);
-            addElementToDOM(newItemToSave);
+            addElementToDOM(newItemToSave, isNew);
             clearTextInput();
         }
     }
 }
 
 
-function addElementToDOM(newItemToSave) {
+function addElementToDOM(newItemToSave, isNew = false) {
 
-    let listItems = document.getElementById("todo-list");
-    let listElement = createListElement(newItemToSave);
-    listItems.appendChild(listElement);
 
-    let sortOption = document.getElementById("sorting-options").value;
-
-    debugger;
-
-    const indexToInsert = getIndexToInsert(sortOption, newItemToSave );
     let parent = document.querySelector('#todo-list');
-    let referenceNode = document.querySelector(`#${indexToInsert}`);
-    parent.insertBefore(newItemToSave,referenceNode);
+    let child = createListElement(newItemToSave);
+
+    if (parent.hasChildNodes() && isNew) {
+        let indexToInsert = JSON.parse(localStorage.getItem("indexToInsert"));
+        parent.insertBefore(child, parent.children[indexToInsert]);
+    }
+    else {
+        parent.appendChild(child);
+    }
 }
 
 function createTaskDate(taskDate) {
@@ -221,6 +227,7 @@ function clearTextInput() {
 }
 
 function createListElement(todoItem) {
+
     let listItem = document.createElement("li");
     listItem.className = "list-element";
     listItem.id = todoItem.id;
@@ -239,6 +246,7 @@ function createListElement(todoItem) {
 }
 
 function createDeleteButton(idToDelete) {
+
     let deleteBtn = document.createElement("input");
     deleteBtn.type = "button";
     deleteBtn.value = "X";
@@ -325,7 +333,6 @@ function changeTodoStatusOnLocalStorage(todoItem) {
 function setDropdownSelection() {
     document.querySelector('#sorting-options').value = savedTodoItems.sortState;
 }
-
 
 getItemsFromLocalStorage();
 setDropdownSelection();
