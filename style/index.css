@@ -1,0 +1,33 @@
+.delete-btn{
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+.delete-btn:hover {
+    background-color: #FF0000; /* Green */
+    color: white;
+}
+
+.list-element{
+    display : flex;
+    vertical-align: middle;
+}
+
+.list-element{
+    margin: 10px 0 0 0;
+}
+
+#task-description, #todo-list {
+    margin: 30px 0 0 0;
+}
+
+
+#dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+}
+
+
