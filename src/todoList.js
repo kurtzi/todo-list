@@ -63,8 +63,8 @@ function statusComparision(item1, item2) {
 
 function renderTodoItems() {
 
-    savedTodoItems.items.forEach((todoItem) => {
-        addElementToDOM(todoItem)
+    savedTodoItems.items.forEach((todoItem, index) => {
+        addElementToDOM(todoItem, index)
     });
 }
 
@@ -120,8 +120,8 @@ function sortTodoItems(sortType) {
     let listItems = document.getElementById("todo-list");
     listItems.innerHTML = ""; //drop all children
 
-    todoItems.forEach((todoItem) => {
-        addElementToDOM(todoItem);
+    todoItems.forEach((todoItem, index) => {
+        addElementToDOM(todoItem, index);
     });
 }
 
