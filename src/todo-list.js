@@ -12,7 +12,7 @@ function addEntry() {
         document.getElementById("inputBox").value = '';
         itemArr.push({text: newEntry, time: currTime, isDone: false})
         updateList();
-        deSelectDropdown();
+        sortList();
     }
     else {
         alert('Please enter something, surely you got SOMETHING to do')
