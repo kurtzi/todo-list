@@ -1,0 +1,15 @@
+body {
+    background-color: lightblue;
+}
+
+.pageTop {
+    color: navy;
+    text-align: center;
+}
+h2 {
+    color: black;
+    text-align: center;
+    font-family: "Arial Black";
+    font-size: 14px;
+}
+
