@@ -54,7 +54,6 @@ function getIndexToInsert(sortType = 'Date', newItemToSave) {
     }
 
     return savedTodoItems.items.length;
-
 }
 
 function statusComparision(item1, item2) {
@@ -99,8 +98,8 @@ function sortByStatus() {
     let listItems = document.getElementById("todo-list");
     listItems.innerHTML = ""; //drop all children
 
-    todoItems.forEach((todoItem) => {
-        addElementToDOM(todoItem);
+    todoItems.forEach((todoItem, index) => {
+        addElementToDOM(todoItem, index);
     });
 }
 
@@ -173,25 +172,21 @@ function addItemToList(e) {
                 id: savedTodoItems.counter
             };
 
-            const isNew = true;
             let indexToInsert = getIndexToInsert(sortOption, newItemToSave);
 
-            debugger;
             saveStateToLocalStorage(newItemToSave, sortOption, indexToInsert);
-            addElementToDOM(newItemToSave, isNew, indexToInsert);
+            addElementToDOM(newItemToSave, indexToInsert);
             clearTextInput();
         }
     }
 }
 
-
-function addElementToDOM(newItemToSave, isNew = false, indexToInsert) {
-
+function addElementToDOM(newItemToSave, indexToInsert) {
 
     let parent = document.querySelector('#todo-list');
     let child = createListElement(newItemToSave);
 
-    if (parent.hasChildNodes() && isNew) {
+    if (parent.hasChildNodes() ) {
         parent.insertBefore(child, parent.children[indexToInsert]);
     }
     else {
