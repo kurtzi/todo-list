@@ -2,15 +2,17 @@
  * Created by idoi on 25/03/2018.
  */
 
-var itemArr = [];
+let itemArr = [];
 
 function addEntry() {
-    var newEntry = document.getElementsByTagName("input")[0].value
+    let newEntry = document.getElementById("inputBox").value
+    console.log(newEntry)
     if(newEntry) {
-        var currTime = new Date();
-        document.getElementsByTagName("input")[0].value = '';
+        let currTime = new Date();
+        document.getElementById("inputBox").value = '';
         itemArr.push({text: newEntry, time: currTime, isDone: false})
         updateList();
+        deSelectDropdown();
     }
     else {
         alert('Please enter something, surely you got SOMETHING to do')
@@ -18,7 +20,7 @@ function addEntry() {
 }
 
 function getSavedList() {
-    var savedList = JSON.parse(localStorage.getItem("entriesList"))
+    let savedList = JSON.parse(localStorage.getItem("entriesList"))
     if (savedList) {
         itemArr = savedList;
          updateList()
@@ -27,15 +29,15 @@ function getSavedList() {
 
 function updateList() {
     //console.log("updateList is running")
-    var todoList = document.getElementById("todoList");
+    let todoList = document.getElementById("todoList");
     while( todoList.firstChild ){
         todoList.removeChild( todoList.firstChild );
     }
-    for (var thisItem in itemArr) {
+    for (let thisItem in itemArr) {
 
-        var node = document.createElement("LI");
-        var textNode = document.createTextNode(itemArr[thisItem]['text']);
-        var checkBox = document.createElement('input');
+        let node = document.createElement("LI");
+        let textNode = document.createTextNode(itemArr[thisItem]['text']);
+        let checkBox = document.createElement('input');
 
         checkBox.type = 'checkbox';
         checkBox.id = 'isDone' + thisItem;
@@ -49,16 +51,20 @@ function updateList() {
 
         todoList.appendChild(node);
     }
+
     saveListLocally();
 }
 
 function changeIsDone(d) {
-    var isChecked = document.getElementById(d).checked
-    var index = d.substr(6)  //gets the index #
+    let isChecked = document.getElementById(d).checked
+    let index = d.substr(6)  //gets the index #
     itemArr[index].isDone = isChecked;
+    deSelectDropdown();
     saveListLocally();
 }
-
+function deSelectDropdown () {
+    document.getElementById('sortBox').value = -1;
+}
 function saveListLocally() {
     try {localStorage.setItem("entriesList", JSON.stringify(itemArr))
         }
@@ -68,8 +74,8 @@ function saveListLocally() {
 }
 
 function removeDone() {
-    var newArr = [];
-    for (var i = 0;  i < itemArr.length; i++) {
+    let newArr = [];
+    for (let i = 0;  i < itemArr.length; i++) {
         if (!itemArr[i].isDone) {
             newArr.push(itemArr[i]);
         }
@@ -87,8 +93,7 @@ function removeDone() {
 
 
 function sortList() {
-    var selection = document.getElementById('sortBox').value;
-    console.log(selection)
+    let selection = document.getElementById('sortBox').value;
     switch(Number(selection)) {
         case 0:
             itemArr.sort(function(a, b) {
@@ -139,11 +144,9 @@ function sortList() {
             })
             break;
         case 4:
-            console.log("case 4")
             itemArr.sort(function(a, b) {
-                var text1 = a.text.toUpperCase();
-                var text2 = b.text.toUpperCase();
-                console.log(text1, text2)
+                let text1 = a.text.toUpperCase();
+                let text2 = b.text.toUpperCase();
                 if (text1 < text2) {
                     return -1;
                 }
@@ -155,9 +158,8 @@ function sortList() {
             break;
         case 5:
             itemArr.sort(function(a, b) {
-                var text1 = a.text.toUpperCase();
-                var text2 = b.text.toUpperCase();
-                console.log(text1, text2)
+                let text1 = a.text.toUpperCase();
+                let text2 = b.text.toUpperCase();
                 if (text1 > text2) {
                     return -1;
                 }
@@ -174,7 +176,5 @@ function sortList() {
             break;
 
     }
-
-
     updateList()
 }

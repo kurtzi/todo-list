@@ -7,12 +7,11 @@
 <script src="src/todo-list.js"></script>
 
 <body onload="getSavedList()">
-<h1> What a day to be alive </h1>
+<h1> My TODO List </h1>
+<h2> "It gets easier. Every day it gets a little easier. But you got to do it every day. That's the hard part. But it does get easier."</h2>
 
 
-<br> What do you need to do? <input type="text" name="FirstName" ><br>
-<button onclick="addEntry()">Add TODO</button>
-<button onclick="removeDone()">Remove all done</button>
+
 <span> Sort By:</span>
 <select id="sortBox" onchange="sortList()">
     <option value="0">Date (Oldest > Newest)</option>
@@ -24,9 +23,19 @@
 
 
 </select>
+<button onclick="removeDone()">Remove all done</button>
 <ul id="todoList">
 
 </ul>
-
+<br> What do you need to do? <input id="inputBox" type="text" ><br>
+<button onclick="addEntry()">Add TODO</button>
+<script>
+    var textInputBox = document.getElementById("inputBox")
+    textInputBox.addEventListener("keypress", function(e) {
+        if ((e.which || e.keyCode) === 13) {
+            addEntry();
+        }
+    });
+</script>
 </body>
 </html>
