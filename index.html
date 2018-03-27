@@ -12,6 +12,18 @@
 
 <br> What do you need to do? <input type="text" name="FirstName" ><br>
 <button onclick="addEntry()">Add TODO</button>
+<button onclick="removeDone()">Remove all done</button>
+<span> Sort By:</span>
+<select id="sortBox" onchange="sortList()">
+    <option value="0">Date (Oldest > Newest)</option>
+    <option value="1">Date (Newest > Oldest)</option>
+    <option value="2">Done</option>
+    <option value="3">Not Done</option>
+    <option value="4">Alphabetical (A > Z)</option>
+    <option value="5">Alphabetical (Z > A)</option>
+
+
+</select>
 <ul id="todoList">
 
 </ul>
