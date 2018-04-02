@@ -6,7 +6,8 @@
 </head>
 <script src="src/todo-list.js"></script>
 <link rel="stylesheet" type="text/css" href="src/style.css">
-<body onload="getSavedList()">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <div class="pageTop">
     <h1> My TODO List </h1>
     <h2> "It gets easier. Every day it gets a little easier. But you got to do it every day. That's the hard part. But it does get easier."</h2>
@@ -15,7 +16,7 @@
 
 
 <span> Sort By:</span>
-<select id="sortBox" onchange="sortList()">
+<select id="sortBox">
     <option value="0">Date (Oldest > Newest)</option>
     <option value="1">Date (Newest > Oldest)</option>
     <option value="2">Done</option>
@@ -25,19 +26,11 @@
 
 
 </select>
-<button onclick="removeDone()">Remove all done</button>
+<button id="editBtn">Edit/Remove</button>
 <ul id="todoList">
 
 </ul>
 <br> What do you need to do? <input id="inputBox" type="text" ><br>
-<button onclick="addEntry()">Add TODO</button>
-<script>
-    var textInputBox = document.getElementById("inputBox")
-    textInputBox.addEventListener("keypress", function(e) {
-        if ((e.which || e.keyCode) === 13) {
-            addEntry();
-        }
-    });
-</script>
+<button id="addBtn">Add TODO</button>
 </body>
 </html>
