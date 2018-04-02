@@ -1,20 +1,23 @@
 const sortDropdown = document.getElementById("sortBy");
 sortDropdown.addEventListener("change", sortOnChange);
 document.getElementById('taskInput').addEventListener("keydown",addListElement);
-let storage = {};
+let storage = {items:[], idCount:0, sortBy:"date"};
 
 function start() {
     if(localStorage.getItem("storage") === null){
-        localStorage.setItem("storage", JSON.stringify({items:[], idCount:0, sortBy:"date"}));
-        storage = JSON.parse(localStorage.getItem("storage"));
+        updateLocalStorage();
     }
     else{
         storage = JSON.parse(localStorage.getItem("storage"));
         sortDropdown.value = storage.sortBy;
         let newItems = sortItems(storage.items, storage.sortBy); // not sure if needed
-        for(let i = 0; i<newItems.length; i++){
+        newItems.forEach((item, i) => {
             itemToUl(newItems[i],i);
-        }
+
+        })
+        // for(let i = 0; i<newItems.length; i++){
+        //     itemToUl(newItems[i],i);
+        // }
     }
 }
 
@@ -32,7 +35,7 @@ function addListElement(e){
         storage.idCount++;
         storage.items.splice(insertIndex,0, newTask);
 
-        localStorage.setItem("storage",JSON.stringify(storage));
+        updateLocalStorage();
 
         itemToUl(newTask,insertIndex)
     }
@@ -57,7 +60,7 @@ function changeCheckbox(id) {
             storage.items[i].checkBox = !storage.items[i].checkBox;
         }
     }
-    localStorage.setItem("storage",JSON.stringify(storage));
+    updateLocalStorage();
 }
 
 function remove(li){
@@ -67,7 +70,7 @@ function remove(li){
            storage.items.splice(i,1);
         }
     }
-    localStorage.setItem("storage",JSON.stringify(storage));
+    updateLocalStorage();
     ul.removeChild(li);
 }
 function displayDate(today) {
@@ -96,7 +99,7 @@ function sortOnChange() {
     storage.sortBy = sortType;
     let sortedItems = sortItems(storage.items, sortType);
     storage.items = sortedItems;
-    localStorage.setItem("storage", JSON.stringify(storage));
+    updateLocalStorage();
     document.getElementById("tasks").innerHTML = "";
     for(let i = 0; i<sortedItems.length; i++){
         itemToUl(sortedItems[i],i);
@@ -108,21 +111,19 @@ function indexToInsert(newTask,sortBy) {
     if (sortBy === "date"){
         return items.length;
     }
-    else{
+    else {
         for(let i =0; i<items.length; i++){
-            if (sortBy === "alphabetical order" ){
-                if(newTask.task.toUpperCase() < items[i].task.toUpperCase()) {
+            if (sortBy === "alphabetical order" && newTask.task.toUpperCase() < items[i].task.toUpperCase()){
                     return i;
-                }
             }
-            if (sortBy === "done"){
-                if(newTask.checkBox > items[i].checkBox){
+            else if (sortBy === "done" && newTask.checkBox > items[i].checkBox){
                     return i
-                }
             }
         }
         return items.length;
     }
+
+
 }
 function sortAlphabetically(items) {
     items.sort(function(a, b) {
@@ -167,5 +168,9 @@ function sortByDate(items) {
         return 0;
     });
     return items;
+}
+
+function updateLocalStorage() {
+    localStorage.setItem("storage",JSON.stringify(storage));
 }
 start();
