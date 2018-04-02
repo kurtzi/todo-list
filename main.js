@@ -18,7 +18,6 @@ function start() {
 }
 
 function addListElement(e){
-    console.log("adding");
     const enterKey = 13;
     if(document.getElementById('taskInput').value !== "" && e.keyCode === enterKey) {
 
@@ -27,7 +26,6 @@ function addListElement(e){
         let today = new Date();
         let newTask={"task":taskDescription, "date":today, "checkBox":false, "id":storage.idCount};
         let insertIndex = indexToInsert(newTask, storage.sortBy);
-        console.log(insertIndex);
         storage.idCount++;
         storage.items.splice(insertIndex,0, newTask);
 
@@ -44,7 +42,7 @@ function sortItems(items, sortType){
     else if (sortType === "done"){
         items = sortByDone(items);
     }
-    else{      //sorting by date, defult
+    else{
       items = sortByDate(items);
     }
     return(items);
@@ -127,8 +125,8 @@ function indexToInsert(newTask,sortBy) {
 
 function sortAlphabetically(items) {
     items.sort(function(a, b) {
-        let taskA = a.task.toUpperCase(); // ignore upper and lowercase
-        let taskB = b.task.toUpperCase(); // ignore upper and lowercase
+        let taskA = a.task.toUpperCase();
+        let taskB = b.task.toUpperCase();
         if (taskA < taskB) {
             return -1;
         }
