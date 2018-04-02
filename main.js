@@ -1,23 +1,19 @@
 const sortDropdown = document.getElementById("sortBy");
-sortDropdown.addEventListener("change", sortOnChange);
-document.getElementById('taskInput').addEventListener("keydown",addListElement);
 let storage = {items:[], idCount:0, sortBy:"date"};
 
 function start() {
-    if(localStorage.getItem("storage") === null){
+    sortDropdown.addEventListener("change", sortOnChange);
+    document.getElementById('taskInput').addEventListener("keydown",addListElement);
+    let local = localStorage.getItem("storage");
+    if(local === null){
         updateLocalStorage();
     }
     else{
-        storage = JSON.parse(localStorage.getItem("storage"));
+        storage = JSON.parse(local);
         sortDropdown.value = storage.sortBy;
-        let newItems = sortItems(storage.items, storage.sortBy); // not sure if needed
-        newItems.forEach((item, i) => {
+        storage.items.forEach((item, i) => {
             itemToUl(newItems[i],i);
-
-        })
-        // for(let i = 0; i<newItems.length; i++){
-        //     itemToUl(newItems[i],i);
-        // }
+        });
     }
 }
 
@@ -55,7 +51,6 @@ function sortItems(items, sortType){
 }
 
 function changeCheckbox(li, newTask) {
-    const ul = document.getElementById("tasks");
     for(let i=0;i<storage.items.length;i++){
         if (storage.items[i].id === parseInt(li.id)){
             storage.items[i].checkBox = !storage.items[i].checkBox;
@@ -73,29 +68,29 @@ function changeCheckbox(li, newTask) {
 
 function remove(li){
     const ul = document.getElementById("tasks");
-    for(let i=0;i<storage.items.length;i++){
-        if (storage.items[i].id === parseInt(li.id)){
-           storage.items.splice(i,1);
-        }
-    }
+    storage.items = storage.items.filter(task => task.id !== parseInt(li.id));
     updateLocalStorage();
     ul.removeChild(li);
 }
-function displayDate(today) {
-    today = new Date(Date.parse(today));
-    let dd = today.getDay()+1;
-    let mm = today.getMonth()+1; //January is 0
-    let yyyy = today.getFullYear();
-    if(dd<10) dd = '0'+dd;
-    if(mm<10) mm = '0'+mm;
-    return(dd + '/' + mm+ '/' + yyyy);
 
+function displayDate(today) {
+    let newToday = new Date(Date.parse(today));
+    let dd = newToday.getDay() + 1;
+    let mm = newToday.getMonth() + 1;
+    let yyyy = newToday.getFullYear();
+    if(dd<10){
+        dd = '0'+dd;
+    }
+    if(mm<10){
+        mm = '0'+mm;
+    }
+    return (dd + '/' + mm+ '/' + yyyy);
 }
 
 function itemToUl(item, index){
     const ul = document.getElementById("tasks");
     let li = document.createElement("li");
-    li.innerHTML = `<span>${item.task}</span><span> ${displayDate(item.date)}</span><input type = "checkbox" ${item.checkBox ? "checked":""}><button> Delete Task</button>`;
+    li.innerHTML = `<span>${item.task}</span><span>${displayDate(item.date)}</span><input type = "checkbox" ${item.checkBox ? "checked":""}><button> Delete Task</button>`;
     li.setAttribute("id", item.id);
     li.querySelector("input").addEventListener("change",function (){changeCheckbox(li, item)});
     li.querySelector("button").addEventListener("click",function (){remove(li)});
@@ -119,20 +114,17 @@ function indexToInsert(newTask,sortBy) {
     if (sortBy === "date"){
         return items.length;
     }
-    else {
-        for(let i =0; i<items.length; i++){
-            if (sortBy === "alphabetical order" && newTask.task.toUpperCase() < items[i].task.toUpperCase()){
-                    return i;
-            }
-            else if (sortBy === "done" && newTask.checkBox > items[i].checkBox){
-                    return i
-            }
+    for(let i =0; i<items.length; i++){
+        if (sortBy === "alphabetical order" && newTask.task.toUpperCase() < items[i].task.toUpperCase()){
+                return i;
         }
-        return items.length;
+        else if (sortBy === "done" && newTask.checkBox > items[i].checkBox){
+                return i
+        }
     }
-
-
+    return items.length;
 }
+
 function sortAlphabetically(items) {
     items.sort(function(a, b) {
         let taskA = a.task.toUpperCase(); // ignore upper and lowercase
@@ -145,17 +137,17 @@ function sortAlphabetically(items) {
         }
         return 0;
     });
-    return items
+    return items;
 }
 
 function sortByDone(items) {
     items.sort(function(a, b) {
         let doneA = a.checkBox;
         let doneB = b.checkBox;
-        if (doneA > doneB) {
+        if (doneA === true && doneB === false) {
             return -1;
         }
-        if (doneA < doneB) {
+        if (doneA === false && doneB === true) {
             return 1;
         }
         return 0;
