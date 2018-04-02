@@ -54,10 +54,18 @@ function sortItems(items, sortType){
     return(items);
 }
 
-function changeCheckbox(id) {
+function changeCheckbox(li, newTask) {
+    const ul = document.getElementById("tasks");
     for(let i=0;i<storage.items.length;i++){
-        if (storage.items[i].id === id){
+        if (storage.items[i].id === parseInt(li.id)){
             storage.items[i].checkBox = !storage.items[i].checkBox;
+            if(storage.sortBy === "done"){
+                remove(li);
+                let insertIndex = indexToInsert(newTask, "done");
+                storage.items.splice(insertIndex,0, newTask);
+                itemToUl(newTask,insertIndex);
+                break;
+            }
         }
     }
     updateLocalStorage();
@@ -89,7 +97,7 @@ function itemToUl(item, index){
     let li = document.createElement("li");
     li.innerHTML = `<span>${item.task}</span><span> ${displayDate(item.date)}</span><input type = "checkbox" ${item.checkBox ? "checked":""}><button> Delete Task</button>`;
     li.setAttribute("id", item.id);
-    li.querySelector("input").addEventListener("change",function (){changeCheckbox(item.id)});
+    li.querySelector("input").addEventListener("change",function (){changeCheckbox(li, item)});
     li.querySelector("button").addEventListener("click",function (){remove(li)});
     ul.insertBefore(li,ul.childNodes[index]);
 }
