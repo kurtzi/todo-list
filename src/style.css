@@ -12,4 +12,14 @@ h2 {
     font-family: "Arial Black";
     font-size: 14px;
 }
+ul {
+    list-style: none;
+}
 
+.hide {
+    display: none;
+}
+
+.button {
+    display: none;
+}
